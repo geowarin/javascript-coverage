@@ -1,0 +1,27 @@
+{
+  "name": "javascript-coverage",
+  "version": "1.0.0",
+  "description": "How to setup code coverage with gulp, mocha, phantom and blanketjs",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "mocha",
+    "phantomjs",
+    "blanketjs"
+  ],
+  "author": "Geoffroy Warin",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-inject": "^1.1.1",
+    "gulp-mocha-phantomjs": "^0.5.3",
+    "gulp-rename": "^1.2.0",
+    "main-bower-files": "^2.4.1"
+  }
+}
