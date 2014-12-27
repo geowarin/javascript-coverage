@@ -4,7 +4,8 @@ var gulp = require('gulp'),
     mochaPhantomJS = require('gulp-mocha-phantomjs'),
     rename = require('gulp-rename'),
     preprocess = require('gulp-preprocess'),
-    argv = require('yargs').argv;
+    argv = require('yargs').argv,
+    gutil = require('gulp-util');
 
 var coverage = !!argv.coverage; // true if --coverage flag is used
 
@@ -15,9 +16,8 @@ gulp.task('processIndex', function () {
         .pipe(gulp.dest('test'));
 });
 
-gulp.task('testIndex', ['processIndex'], function () {
+gulp.task('injectIntoIndex', ['processIndex'], function () {
     return gulp.src('test/index.html')
-        .on('data', processWinPath)
         .pipe(inject(
             gulp.src(bowerFiles({includeDev: true}), {read: false}),
             {name: 'bower', relative: true}
@@ -33,14 +33,18 @@ gulp.task('testIndex', ['processIndex'], function () {
         .pipe(gulp.dest('test'));
 });
 
-gulp.task('test', ['testIndex'], function () {
+gulp.task('test', ['injectIntoIndex'], function () {
     var options = !coverage ? {} : {
         reporter: 'build/report/mochaBlanketAdapter.js',
         dump: 'test/coverage.html'
     };
     return gulp.src('test/index.html', {read: false})
         .on('data', processWinPath)
-        .pipe(mochaPhantomJS(options));
+        .pipe(mochaPhantomJS(options))
+        .on('end', function() {
+            if (coverage)
+                gutil.log('Generated coverage report to', gutil.colors.cyan(options.dump));
+        });
 });
 
 var processWinPath = function (file) {
