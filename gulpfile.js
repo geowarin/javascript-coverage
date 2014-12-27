@@ -9,6 +9,10 @@ var gulp = require('gulp'),
 
 var coverage = !!argv.coverage; // true if --coverage flag is used
 
+/**
+ *  Process test index to interpret the conditions and move it
+ *  to the test/ directory
+ */
 gulp.task('processIndex', function () {
     return gulp.src('build/templates/testIndex.html')
         .pipe(preprocess({context: {coverage: coverage}}))
@@ -16,6 +20,10 @@ gulp.task('processIndex', function () {
         .pipe(gulp.dest('test'));
 });
 
+/**
+ * Inject resources into test index.
+ * Please note the file should be in its final position for relative paths to work.
+ */
 gulp.task('injectIntoIndex', ['processIndex'], function () {
     return gulp.src('test/index.html')
         .pipe(inject(
@@ -33,6 +41,11 @@ gulp.task('injectIntoIndex', ['processIndex'], function () {
         .pipe(gulp.dest('test'));
 });
 
+/**
+ * Launch mocha phantomjs to run the tests.
+ * By default, all output is redirected to the console and the spec reporter is used.
+ * In coverage mode, output will be redirected to a file and a custom mocha reporter will be used.
+ */
 gulp.task('test', ['injectIntoIndex'], function () {
     var options = !coverage ? {} : {
         reporter: 'build/report/mochaBlanketAdapter.js',
