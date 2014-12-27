@@ -1,4 +1,7 @@
+Calculator = function () {
+    window.result = 0;
 
-window.Calculator = function() {
-    this.result = 0;
+    Calculator.prototype.add = function(number) {
+        window.result += number;
+    }
 };
